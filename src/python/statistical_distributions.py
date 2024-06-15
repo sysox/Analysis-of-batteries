@@ -73,22 +73,34 @@ class ECDF:
         if xlabels.size == 0:
             xlabels = [f'{x:1.2f}' for x in xticks]
 
+
+
+        ax.step(xticks,yticks, where='post', label='Empirical CDF', color='black', linewidth=0.5)
+
+
+        x = np.linspace(domain[0], domain[1], 100)
+        ax.plot(x, self.cdf(x), '--', label=label, color='g')
+
         x_plus = self.Dn_plus_x
         y_plus_min = self.cdf(x_plus)
         y_plus_max = y_plus_min + self.Dn_plus_value
-        plt.vlines([x_plus], [y_plus_min], [y_plus_max], color='magenta', alpha=0.5, lw=4)
+        plt.vlines([x_plus], [y_plus_min], [y_plus_max], color='magenta', lw=4,
+                   label='$D_n^+$=' + f"{self.Dn_plus_value:1.6f}")
+        plt.vlines([x_plus], [0], [y_plus_max], color='magenta', lw=1, linestyle='--')
 
         x_minus = self.Dn_minus_x
         y_minus_max = self.cdf(x_minus)
-        y_minus_min = y_minus_max -  self.Dn_minus_value
+        y_minus_min = y_minus_max - self.Dn_minus_value
 
-        plt.vlines([x_minus], [y_minus_min], [y_minus_max], color='cyan', alpha=0.5, lw=4)
+        plt.vlines([x_minus], [y_minus_min], [y_minus_max], color='cyan', lw=4,
+                   label='$D_n^-$=' + f"{self.Dn_minus_value:1.6f}")
+        plt.vlines([x_minus], [0], [y_minus_max], color='cyan', lw=1, linestyle='--')
+        xticks, yticks = [x_minus, x_plus], [y_minus_min, y_plus_max]
+        ax.set_xticks(ticks=xticks, labels=[f"{xticks[0]:1.2f}", f"{xticks[1]:1.2f}"])
 
-        ax.step(xticks,yticks, where='post', label='Empirical CDF', color='black')
-        x = np.linspace(domain[0], domain[1], 100)
-        ax.plot(x, self.cdf(x), '--', label=label, color='g')
-        ax.set_xticks(ticks=xticks, labels=xlabels)
+
         # ax.grid(True)
+        # plt.plot([], [], ' ', label=f"D-={self.Dn_minus_value:1.2f}\nD+={self.Dn_plus_value:1.2f}")
         ax.legend(framealpha=1, shadow=True)
 
     def __str__(self):
@@ -97,10 +109,10 @@ class ECDF:
 
 if __name__ == "__main__":
     # ecdf of uniform (0, 1) and its plot
-    sample = uniform.rvs(size=3)
+    sample = uniform.rvs(size=100)
     U01 = ECDF(sample)
     U01.Dn()
-
     fig, ax = plt.subplots(1, 1, layout='constrained')
     U01.plot(fig=fig, ax=ax, domain=(0, 1), label="Uniform(0, 1)")
     plt.show()
+
