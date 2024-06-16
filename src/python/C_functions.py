@@ -8,35 +8,17 @@ libpvals = CDLL('../C/libpvals.so')
 # & testu01_pvalue_ksp, & testu01_pvalue_ksm, & testu01_pvalue_ks, & testu01_pvalue_ad, & testu01_pvalue_cm, & testu01_pvalue_wg,
 # & testu01_pvalue_wu, & KS_left, & KS_right, & KS_both, & dieharder_corrected_pvalue};
 
-GoF_test_names = {0:"dieharder_pvalue", 1:"dieharder_pvalue_kuiper", 2:"nist_pvalue", 3:"testu01_pvalue_snpair_ClosePairs",
-       4:"testu01_pvalue_sknuth_MaxOft", 5:"testu01_pvalue_ksp", 6:"testu01_pvalue_ksm", 7:"testu01_pvalue_ks",
-       8:"testu01_pvalue_ad", 9:"testu01_pvalue_cm", 10:"testu01_pvalue_wg", 11:"testu01_pvalue_wu",
-        12:"marsa_KS_left_pvalue", 13:"marsa_KS_right_pvalue", 14:"marsa_both_pvalue", 15:"dieharder_corrected_pvalue",
-        16:"dieharder_fast_pvalue"}
 
-def testname_to_GoF_idx(test_name):
-    if 'Diehard' in test_name:
-        return 0
-    if  'NIST' in test_name:
-        return 2
-    if 'snpair_ClosePairs-1stP' in test_name:
-        return 3
-    if 'sknuth_MaxOft-1stP' in test_name:
-        return 4
-    if 'TestU01' in test_name:
-        return -1
-    return -1
-
-
-
-# C: prototype void GoF_pvals(const char* src_file, int sample_size, int repetitions,
-#                               int GoF_idx, double* resulted_pvals, uint32_t seed);
+# void GoF_pvals(const char* src_file, const char *dst_file, int sample_size, int repetitions, int GoF_idx, uint32_t seed);
 def GoF_pvals_wrapper(src_pvals_filepath, dst_pvals_filepath, sample_size, repetitions, GoF_idx, seed):
+    '''
+    wrapper for
+    void GoF_pvals(const char* src_file, const char *dst_file, int sample_size,
+                int repetitions, int GoF_idx, uint32_t seed);
+    '''
     libpvals.GoF_pvals.argtypes = [c_char_p,c_char_p, c_int, c_int, c_int, c_int]
     libpvals.GoF_pvals.restype = None
-    # array = [-1] * repetitions
     libpvals.GoF_pvals(src_pvals_filepath.encode(), dst_pvals_filepath.encode(),c_int(sample_size), c_int(repetitions), c_int(GoF_idx), c_int(seed))
-    return GoF_test_names[GoF_idx], dst_pvals_filepath
 
 ################################### GoFs from batteries plus some alternative ####################################
 
