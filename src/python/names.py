@@ -1,3 +1,5 @@
+######################################################### Names ########################################################
+
 batteries = ["Dieharder", "NIST", "TestU01"]
 subbatteries = ["Diehard", "Dieharder", "NIST_STS", "Small_Crush", "Crush", "Rabbit", "Alphabit", "Block_Alphabit"]
 subbatteries_abreviations = ["Drd", "Drd", "STS", "SC", "C", "R", "A", "BA" ]
@@ -6,6 +8,8 @@ GoFs = ["dieharder_pvalue", "dieharder_pvalue_kuiper", "nist_pvalue", "testu01_p
                   "testu01_pvalue_ad", "testu01_pvalue_cm", "testu01_pvalue_wg", "testu01_pvalue_wu",
                   "marsa_KS_left_pvalue", "marsa_KS_right_pvalue", "marsa_both_pvalue", "dieharder_corrected_pvalue",
                   "dieharder_fast_pvalue"]
+
+
 
 files_names_examples = ["Dieharder(4) Diehard Bitstream Test.pval",
                         "Dieharder(208) DAB Fill Tree Test 2 Subtest 2.pval",
@@ -22,7 +26,13 @@ files_names_examples = ["Dieharder(4) Diehard Bitstream Test.pval",
                         "TestU01 Rabbit(25) swalk_RandomWalk1-P5.pval",
                         "TestU01 Small Crush(4) sknuth_SimpPoker.pval",
                         "TestU01 Small Crush(10) swalk_RandomWalk1-P1.pval"]
+
+######################################################### Functions ####################################################
 def extract_from_path(path):
+    '''
+    extracts all relevant data from file name "TestU01 Small Crush(10) swalk_RandomWalk1-P1.pval"
+    - battery name, subbattery name, test name, test id as string "id1|id2|id3"
+    '''
     filename = path.split('/')[-1].split('.pval')[0]
     idx1, idx2 = filename.find('('), filename.find(')')
     test_id = filename[idx1+1:idx2]
@@ -52,6 +62,32 @@ def extract_from_path(path):
     else:
         subbattery = '_'.join(filename.split('(')[0].split(' ')[1:])
     return battery, subbattery, test, id_string
+
+
+# uniform_pvals_WSL_path = 'mnt/d/Data/pvals/pvals/uniform_virtual_test/pvals'
+# uniform_pvals_Windows_path = 'D:\Data\pvals\pvals\uniform_virtual_test\pvals'
+
+GoF_test_ids = list(range(17))
+
+GoF_test_names = {0:"dieharder_pvalue", 1:"dieharder_pvalue_kuiper", 2:"nist_pvalue", 3:"testu01_pvalue_snpair_ClosePairs",
+       4:"testu01_pvalue_sknuth_MaxOft", 5:"testu01_pvalue_ksp", 6:"testu01_pvalue_ksm", 7:"testu01_pvalue_ks",
+       8:"testu01_pvalue_ad", 9:"testu01_pvalue_cm", 10:"testu01_pvalue_wg", 11:"testu01_pvalue_wu",
+        12:"marsa_KS_left_pvalue", 13:"marsa_KS_right_pvalue", 14:"marsa_both_pvalue", 15:"dieharder_corrected_pvalue",
+        16:"dieharder_fast_pvalue"}
+
+# def testname_to_GoF_idx(test_name):
+#     if 'Diehard' in test_name:
+#         return 0
+#     if  'NIST' in test_name:
+#         return 2
+#     if 'snpair_ClosePairs-1stP' in test_name:
+#         return 3
+#     if 'sknuth_MaxOft-1stP' in test_name:
+#         return 4
+#     if 'TestU01' in test_name:
+#         return -1
+#     return -1
+
 
 if __name__ == "__main__":
     #     testing names of files
