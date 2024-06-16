@@ -14,10 +14,10 @@ def uniform_random(sample_size, interval = (0, 1)):
 
 def find_closest(array, value):
     # looking for closest value and its index in array
-    idx = (np.abs(array-value)).argmin()
-    return idx, array[idx]
+    idx = (np.abs(array - value)).argmin()
+    return idx
 
-def interval_freqs(sample, intervals):
+def intervals_and_freqs(sample, intervals):
     '''
     intervals - list of tuples
     sample - list
@@ -67,6 +67,8 @@ def data_to_csv(header, rows, filename='test.csv'):
     assert len(header) == len(rows[0]), print(len(header), len(rows[0]))
     with open('test.csv', 'w', newline='') as f_output:
         f_output.write(table.get_csv_string())
+
+
 
 if __name__ == "__main__":
     # Reading pvalues as using numpy
