@@ -226,24 +226,24 @@ class ECDF:
         x_plus = self.Dn_plus_x
         y_plus_min = self.cdf(x_plus)
         y_plus_max = y_plus_min + self.Dn_plus_value
-        plt.vlines([x_plus], [y_plus_min], [y_plus_max], color='magenta', lw=4,
+        ax.vlines([x_plus], [y_plus_min], [y_plus_max], color='magenta', lw=4,
                    label='$D_n^+$=' + f"{self.Dn_plus_value:1.6f}")
-        plt.vlines([x_plus], [0], [y_plus_max], color='magenta', lw=1, linestyle='--')
+        ax.vlines([x_plus], [0], [y_plus_max], color='magenta', lw=1, linestyle='--')
 
         x_minus = self.Dn_minus_x
         y_minus_max = self.cdf(x_minus)
         y_minus_min = y_minus_max - self.Dn_minus_value
 
-        plt.vlines([x_minus], [y_minus_min], [y_minus_max], color='cyan', lw=4,
+        ax.vlines([x_minus], [y_minus_min], [y_minus_max], color='cyan', lw=4,
                    label='$D_n^-$=' + f"{self.Dn_minus_value:1.6f}")
-        plt.vlines([x_minus], [0], [y_minus_max], color='cyan', lw=1, linestyle='--')
+        ax.vlines([x_minus], [0], [y_minus_max], color='cyan', lw=1, linestyle='--')
         xticks, yticks = [0, x_minus, x_plus, 1], [0, y_minus_min, y_plus_max, 1.1]
         ax.set_xticks(ticks=xticks, labels=[f"{xtick:1.2f}" for xtick in xticks])
         # ax2 = ax.twiny()
         # ax2.set_xticks(ticks=[0, 1], labels=['0', '1'])
         # ax.grid(True)
         # plt.plot([], [], ' ', label=f"D-={self.Dn_minus_value:1.2f}\nD+={self.Dn_plus_value:1.2f}")
-        ax.legend(framealpha=1, shadow=True)
+        ax.legend(framealpha=0.5, shadow=False, fontsize="6")
 
     def __str__(self):
         return f"ECDF: sample={self.x_sorted}, ecdf_values={self.ecdf_values}"
