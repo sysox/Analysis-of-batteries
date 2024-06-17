@@ -237,10 +237,10 @@ class ECDF:
         plt.vlines([x_minus], [y_minus_min], [y_minus_max], color='cyan', lw=4,
                    label='$D_n^-$=' + f"{self.Dn_minus_value:1.6f}")
         plt.vlines([x_minus], [0], [y_minus_max], color='cyan', lw=1, linestyle='--')
-        xticks, yticks = [x_minus, x_plus], [y_minus_min, y_plus_max]
-        ax.set_xticks(ticks=xticks, labels=[f"{xticks[0]:1.2f}", f"{xticks[1]:1.2f}"])
-
-
+        xticks, yticks = [0, x_minus, x_plus, 1], [0, y_minus_min, y_plus_max, 1.1]
+        ax.set_xticks(ticks=xticks, labels=[f"{xtick:1.2f}" for xtick in xticks])
+        # ax2 = ax.twiny()
+        # ax2.set_xticks(ticks=[0, 1], labels=['0', '1'])
         # ax.grid(True)
         # plt.plot([], [], ' ', label=f"D-={self.Dn_minus_value:1.2f}\nD+={self.Dn_plus_value:1.2f}")
         ax.legend(framealpha=1, shadow=True)
