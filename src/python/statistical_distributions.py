@@ -1,7 +1,10 @@
-from scipy.stats import binom, norm, chi2, uniform, multinomial
-from scipy.stats import chisquare
+#tests
+from scipy.stats import binom, norm, chi2, uniform, multinomial, ksone
 
-from  scipy.special import smirnov
+#distributions
+from scipy.stats import chisquare
+from scipy.special import smirnov
+
 import collections, copy, math, matplotlib.pyplot as plt, numpy as np
 from src.python.histograms import bin_frequency
 
@@ -70,7 +73,6 @@ def chi2_dist(Expected_freqs_vec):
         chi2_pvals.append(pvalue)
     chi2_stats_ints = [round(chi2_stat*c) for chi2_stat in chi2_stats]
     return chi2_stats_ints, multinomial_probs, chi2_pvals, observations
-
 def multinomial_as_chi2_dist(n, k):
     '''
     chi2 approximation for multinomial distribution
@@ -107,7 +109,6 @@ def multinomial_as_chi2_dist(n, k):
            'chi2_disc_cdf':chi2_as_multinomial_cdf,
            'chi2_pdf': chi2_pdf, 'chi2_cdf':chi2_cdf}
     return res
-
 def normal_distributions(n=400, p=0.5, alpha=0.01, alternative="two-sided"):
     # Percent point function (inverse of cdf — percentiles).
     x_disc = np.arange(0, n + 1, 1)
@@ -150,9 +151,6 @@ def normal_distributions(n=400, p=0.5, alpha=0.01, alternative="two-sided"):
             'distribution_relative': distribution_relative,
             'funcs_absolute': funcs_absolute,
             'funcs_relative': funcs_relative}
-
-
-
 
 dists = {'uniform': uniform, 'normal': norm, 'chi2': chi2}
 class ECDF:
@@ -211,7 +209,7 @@ class ECDF:
         return self.KS_pvalue
 
 
-    def plot(self, fig, ax, domain=(0,1), label=None, xticks=np.array([]), yticks=np.array([]), xlabels=np.array([])):
+    def plot(self,  domain=(0,1), ax=None, label=None, xticks=np.array([]), yticks=np.array([]), xlabels=np.array([])):
         if xticks.size == 0:
             xticks = np.concatenate(([domain[0]], self.x, [domain[1]]))
         if yticks.size == 0:
@@ -220,10 +218,7 @@ class ECDF:
         if xlabels.size == 0:
             xlabels = [f'{x:1.2f}' for x in xticks]
 
-
-
         ax.step(xticks,yticks, where='post', label='Empirical CDF', color='black', linewidth=0.5)
-
 
         x = np.linspace(domain[0], domain[1], 100)
         ax.plot(x, self.cdf(x), '--', label=label, color='g')
@@ -260,7 +255,7 @@ if __name__ == "__main__":
     U01 = ECDF(sample)
     U01.Dn()
     fig, ax = plt.subplots(1, 1, layout='constrained')
-    U01.plot(fig=fig, ax=ax, domain=(0, 1), label="Uniform(0, 1)")
+    U01.plot(domain=(0, 1), ax=ax,  label="Uniform(0, 1)")
     plt.show()
 
     # distribution binomial and approx normal
@@ -273,5 +268,5 @@ if __name__ == "__main__":
     chi2_data = multinomial_as_chi2_dist(n = 24, k=4)
     print(f"sum from cdf= {chi2_data['chi2_disc_cdf'][-1]}, sum using pmf= {sum(chi2_data['chi2_disc_pmf'])}")
     print(f"sum from cdf= {chi2_data['chi2_cdf'][-1]}, sum using pdf= {sum(chi2_data['chi2_pdf'])}")
-    # !!! surprinsingly sum of chi2 distribution for distrete values is not close to 1
+    # !!! surprisingly sum of chi2 distribution for distrete values is not close to 1
     # - does not make sense to integrate for discrete points!!!
