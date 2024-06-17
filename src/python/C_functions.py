@@ -1,7 +1,7 @@
 from ctypes import *
 import utils
-
-libpvals = CDLL('../C/libpvals.so')
+from names import dll_path
+libpvals = CDLL(dll_path)
 
 # utils.c - field of second level uniformity tests (from batteries mostly)
 # GoF_functions[] = { & dieharder_pvalue, & dieharder_pvalue_kuiper, & nist_pvalue, & testu01_pvalue_snpair_ClosePairs, & testu01_pvalue_sknuth_MaxOft,
