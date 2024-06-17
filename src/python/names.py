@@ -3,13 +3,10 @@
 batteries = ["Dieharder", "NIST", "TestU01"]
 subbatteries = ["Diehard", "Dieharder", "NIST_STS", "Small_Crush", "Crush", "Rabbit", "Alphabit", "Block_Alphabit"]
 subbatteries_abreviations = ["Drd", "Drd", "STS", "SC", "C", "R", "A", "BA" ]
-GoFs = ["dieharder_pvalue", "dieharder_pvalue_kuiper", "nist_pvalue", "testu01_pvalue_snpair_ClosePairs",
-                  "testu01_pvalue_sknuth_MaxOft", "testu01_pvalue_ksp", "testu01_pvalue_ksm", "testu01_pvalue_ks",
-                  "testu01_pvalue_ad", "testu01_pvalue_cm", "testu01_pvalue_wg", "testu01_pvalue_wu",
-                  "marsa_KS_left_pvalue", "marsa_KS_right_pvalue", "marsa_both_pvalue", "dieharder_corrected_pvalue",
-                  "dieharder_fast_pvalue"]
-
-
+GoFs = ["dieharder_default", "dieharder_kuiper", "nist_chi2", "testu01_snpair_ClosePairs",
+        "testu01_sknuth_MaxOft", "testu01_ksp", "testu01_ksm", "testu01_ks",
+        "testu01_ad", "testu01_cm", "testu01_wg", "testu01_wu", "marsa_KS_left",
+        "marsa_KS_right", "marsa_KS_both", "dieharder_corrected", "dieharder_fast"]
 
 files_names_examples = ["Dieharder(4) Diehard Bitstream Test.pval",
                         "Dieharder(208) DAB Fill Tree Test 2 Subtest 2.pval",
@@ -66,7 +63,7 @@ def extract_from_path(path):
 
 # uniform_pvals_WSL_path = 'mnt/d/Data/pvals/pvals/uniform_virtual_test/pvals'
 # uniform_pvals_Windows_path = 'D:\Data\pvals\pvals\uniform_virtual_test\pvals'
-
+dll_path = '/mnt/c/Users/user/PycharmProjects/Analysis-of-batteries/src/C/libpvals.so'
 GoF_test_ids = list(range(17))
 
 GoF_test_names = {0:"dieharder_pvalue", 1:"dieharder_pvalue_kuiper", 2:"nist_pvalue", 3:"testu01_pvalue_snpair_ClosePairs",
