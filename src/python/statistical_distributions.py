@@ -218,10 +218,11 @@ class ECDF:
         if xlabels.size == 0:
             xlabels = [f'{x:1.2f}' for x in xticks]
 
-        ax.step(xticks,yticks, where='post', label='Empirical CDF', color='black', linewidth=0.5)
+        ax.step(xticks,yticks, where='post', label='ECDF', color='black', linewidth=0.5)
 
         x = np.linspace(domain[0], domain[1], 100)
-        ax.plot(x, self.cdf(x), '--', label=label, color='g')
+        print(f"x{x}\n cdf{self.cdf(x)}")
+        ax.plot(x, self.cdf(x), '--', label='CDF', color='b', lw=1)
 
         x_plus = self.Dn_plus_x
         y_plus_min = self.cdf(x_plus)
@@ -239,11 +240,14 @@ class ECDF:
         ax.vlines([x_minus], [0], [y_minus_max], color='cyan', lw=1, linestyle='--')
         xticks, yticks = [x_minus, x_plus], [y_minus_min, y_plus_max]
         ax.set_xticks(ticks=xticks, labels=[f"{xtick:1.2f}" for xtick in xticks])
-        # ax2 = ax.twiny()
-        # ax2.set_xticks(ticks=[0, 1], labels=['0', '1'])
+        ax2 = ax.twiny()
+
+        ax2.set_xticks(ticks=[0, 1], labels=['0', '1'])
+        ax2.set_xlim(ax.get_xlim())  # to keep the same x-axis range
         # ax.grid(True)
         # plt.plot([], [], ' ', label=f"D-={self.Dn_minus_value:1.2f}\nD+={self.Dn_plus_value:1.2f}")
         ax.legend(framealpha=0.5, shadow=False, fontsize="8", loc = "upper left")
+        ax2.set_xlabel(label, labelpad=0)
 
     def __str__(self):
         return f"ECDF: sample={self.x_sorted}, ecdf_values={self.ecdf_values}"
