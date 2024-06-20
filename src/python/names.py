@@ -1,3 +1,5 @@
+from utils import results_traverse
+
 ######################################################### Names ########################################################
 
 batteries = ["Dieharder", "NIST", "TestU01"]
@@ -39,20 +41,28 @@ def extract_from_path(path):
     idx1, idx2 = filename.find('('), filename.find(')')
     test_id = filename[idx1+1:idx2]
     name_subtest = filename[idx2+1:]
-
+    id = ["0"]*3
     # id parsing
     if '-' in test_id:
-        id = test_id.split('-')
+        id[0], id[1] = test_id.split('-')
     else:
-        id = [test_id, "0" ]
-    result_id = 0
-    if '-' in name_subtest:
-        test, pvalue_number = name_subtest.split('-')
-        result_id = pvalue_number.split('P')[1]
+        id[0] = test_id
+
+    if 'Subtest ' in name_subtest:
+        test, pvalue_number = name_subtest.split('Subtest ')
+        id[2] = pvalue_number
     else:
         test = name_subtest
-    id = id + [result_id]
+
+    if '-P' in name_subtest:
+        test, pvalue_number = name_subtest.split('-')
+        id[2] = pvalue_number.split('P')[1]
+    else:
+        test = name_subtest
+
+
     id = list(map(int, id))
+
     id_string = "{:03d}".format(id[0]) + "|" + "{:03d}".format(id[1]) + "|" + "{:03d}".format(int(id[2]))
 
     # battery
@@ -88,11 +98,14 @@ GoF_test_ids = list(range(17))
 
 
 if __name__ == "__main__":
-    #     testing names of files
-    for file in files_names_examples:
+    # testing names of files
+    for file in results_traverse(path = '/mnt/d/Data/batteries_testing/1st/', endswith='pval'):
+    # for file in files_names_examples:
+        print(file)
         battery, subbattery, test, id = extract_from_path(file)
-        print(battery, subbattery, test, id)
+        print('   ', battery, subbattery, test, id)
 
 
-
-
+    path = "/mnt/d/Data/batteries_testing/1st/nist/NIST Statistical Testing Suite(8) Non-overlapping (Aperiodic) Template Matching Test Subtest 2.pval"
+    battery, subbattery, test, id = extract_from_path(path)
+    print(battery, subbattery, test, id)

@@ -1,5 +1,4 @@
-import os
-import time
+import math, csv, os, time
 import numpy as np
 from scipy.stats import uniform
 from prettytable import PrettyTable
@@ -60,21 +59,43 @@ def read_pvalues(path):
     # print(times)
     return pvals
 
+def select_equally(values, step= None, count= None):
+    if step is None:
+        step = (len(values)-1) / (count-1)
+    for i in range(count):
+        yield values[int(i*step)]
 
-def data_to_csv(header, rows, filename='test.csv'):
+
+def data_to_csv(header, rows, filename_csv='test.csv', filename_table = None):
     table = PrettyTable(header)
     table.add_rows(rows)
     assert len(header) == len(rows[0]), print(len(header), len(rows[0]))
-    with open('test.csv', 'w', newline='') as f_output:
+    with open(filename_csv, 'w', newline='') as f_output:
         f_output.write(table.get_csv_string())
+    with open(filename_table, 'w', newline='') as f_output:
+        f_output.write(table.get_string())
 
 
+
+
+def custom_log(x, round_to=1):
+    if x <= 0:
+        return -1000
+    return round(math.log10(x), round_to)
 
 if __name__ == "__main__":
     # Reading pvalues as using numpy
-    pvals = read_pvalues(path='/mnt/d/Data/pvals/pvals/dieharder/pvals/Dieharder(0) Diehard Birthdays Test.pval')
+
+    pvals = read_pvalues(path='/mnt/d/Data/batteries_testing/1st/dieharder/Dieharder(0) Diehard Birthdays Test.pval')
     print(f"first 3 pvals{pvals[:3]}, last 3 pvals{pvals[-3:]}\n")
 
-    # Reading pvalues as using generator
+    # Reading pvalues using generator
     paths = list(results_traverse(path = '/mnt/d/Data/pvals/pvals', endswith='.pval'))
     print(*paths[:2],sep='\n')
+
+    # selection of equally spaced values
+    selected =list(select_equally(range(100), count=12))
+    print(len(selected), selected)
+
+    # rows to csv
+    data_to_csv(header=['1','2'], rows = [[1,2],[3,4]], filename='test.csv')
