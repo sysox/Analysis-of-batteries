@@ -140,7 +140,9 @@ def KS_left_pvalue(pvals, num_pvals):
 
 if __name__ == "__main__":
     pvals = utils.uniform_random(1000) + 0.07
-    # GoF_pvals = GoF_pvals_wrapper("../../data/uniform_pvals_devurand.pval", 100, 0, 100000)
+
+    GoF_pvals = GoF_pvals_wrapper(src_pvals_filepath="/mnt/d/Data/batteries_testing/1st/ideal-devu/uniform_pvals_devurand.pval",
+                                  dst_pvals_filepath='',sample_size=1000, repetitions = 0, GoF_idx=0,seed=1)
     print(marsa_KS_right_pvalue(pvals, len(pvals)))
     print(dieharder_pvalue(pvals, len(pvals)))
     print(dieharder_fast_pvalue(pvals, len(pvals)))

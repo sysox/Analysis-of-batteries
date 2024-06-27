@@ -71,7 +71,6 @@ def draw_tails(tails, axis, text):
     axis.scatter(x, y, s=2, color = color)
     axis2 = axis.twinx()
     axis2_labels = [round(1 / y,1) for y in [ymin, ymax]]
-    print(axis2_labels)
     axis2.set_ylim(axis.get_ylim())
     axis2.set_yticks([ymin, ymax], labels=axis2_labels, minor=False)
     axis.hlines(y=1, xmin=xmin, xmax=xmax, colors='b', linestyles='dashed')
@@ -100,4 +99,9 @@ if __name__ == '__main__':
     draw_tails(tails=tails, axis=axs[1][1], text="tails")
 
     fig.tight_layout()
+    plt.show()
+
+    pvals = uniform_random(10)
+    fig, axs = plt.subplots(1, 1)
+    draw_ECDF(values=pvals, axis=axs[0][0], label="$D_n$ and ECDF")
     plt.show()
