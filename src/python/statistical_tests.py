@@ -49,16 +49,16 @@ def chisquare_2sample_scipy(f_obs1, f_obs2):
     res.statistic, res.pvalue = tmp[:2]
     return res
 
-def binom_scipy(f_obs, n_obs, p = None, f_exp=None, n_exp=None, alternative='two-sided'):
+def binom_scipy(f_obs, n, p = None, f_exp=None, n_exp=None, alternative='two-sided'):
     if p == None:
         p = f_exp/n_exp
-    res = binomtest(f_obs, n=n_obs, p=p, alternative=alternative)
+    res = binomtest(f_obs, n=n, p=p, alternative=alternative)
     return res
 
-def binom_as_normal_scipy(freq_obs, p, n):
+def binom_as_normal_scipy(f_obs, n, p):
     mean = n * p
     std = math.sqrt(n * p * (1 - p))
-    pvalue_right = norm.sf(x=freq_obs, loc=mean, scale=std)
+    pvalue_right = norm.sf(x=f_obs, loc=mean, scale=std)
     return 2*min(pvalue_right, 1-pvalue_right)
 
 # uniformity tests from batteries or other C code
@@ -121,9 +121,9 @@ if __name__ == "__main__":
     print(f"chisq 2 sample statistic = {res_chisq2.statistic}, pvalue = {res_chisq2.pvalue}")
 
     # binom test
-    res_binom = binom_scipy(freqs2[0], n_obs=100, p=None, f_exp=1, n_exp=10)
+    res_binom = binom_scipy(freqs2[0], n=100, p=None, f_exp=1, n_exp=10)
     print(f"binom pvalue = {res_binom.pvalue}")
-    res_binom = binom_scipy(freqs2[0], n_obs=100, p=0.1)
+    res_binom = binom_scipy(freqs2[0], n=100, p=0.1)
     print(f"binom pvalue = {res_binom.pvalue}")
 
     #calling C code uniformity test
