@@ -1,7 +1,7 @@
 from bisect import bisect_left, bisect_right
 import numpy as np
 from collections import Counter
-from utils import uniform_random, find_closest, intervals_and_freqs
+from utils import uniform_random, find_closest, intervals_and_freqs, read_pvalues
 def bin_frequency(sorted_array, interval, interval_type="(]" ):
     '''
     computes frequency of interval in sorted_array
@@ -83,9 +83,8 @@ def find_equal_bins(sorted_sample, depth):
     '''
     split sample into bins of equal size
     '''
-
+    print(depth, len(sorted_sample))
     idx = len(sorted_sample) // 2
-
 
     val1 = sorted_sample[idx]
     val2 = sorted_sample[idx+1]
@@ -102,35 +101,60 @@ def find_equal_bins(sorted_sample, depth):
         vals_right = find_equal_bins(sorted_sample[idx:], depth-1)
         return vals_left + [val] + vals_right
 
+def find_equal_bins(sorted_sample, num_bins):
+    pass
+
+def select_equiv(sorted_sample, num_bins, values = True):
+    step = (len(sorted_sample)-1) / (num_bins-1)
+    idxs = []
+    for i in range(num_bins):
+        idx = round(step * i)
+        idxs.append(idx)
+
+    if values == True:
+        res = [float(sorted_sample[idx]) for idx in idxs]
+        return res
+    else:
+        return idxs
+
+
 if __name__ == "__main__":
     # histogram of (0,1) sample for unsorted and sorted sample
-    sample = uniform_random(5)
-    sample[2] = 1
-    sample[1] = 0
-    hist0 = histogram_inefficient(sample, num_bins=5)
-    hist1 = histogram_unsorted(sample, num_bins=5)
-    hist2 = histogram_sorted(sorted(sample), num_bins=5)
-
-    print(f"sample={sorted(sample)}\n histogram unsing histogram_unsorted={hist1}")
-    print(f"sample={sorted(sample)}\n histogram unsing histogram_unsorted={hist1}")
-    print(f"sample={sorted(sample)}\n histogram unsing histogram_sorted={hist2}\n")
-    assert hist0 == hist1, print(hist0, hist1)
-    assert hist1 == hist2, print(hist1, hist2)
-
-    # bin_frequency testing
+    # sample = uniform_random(5)
+    # sample[2] = 1
+    # sample[1] = 0
+    # hist0 = histogram_inefficient(sample, num_bins=5)
+    # hist1 = histogram_unsorted(sample, num_bins=5)
+    # hist2 = histogram_sorted(sorted(sample), num_bins=5)
+    #
+    # print(f"sample={sorted(sample)}\n histogram unsing histogram_unsorted={hist1}")
+    # print(f"sample={sorted(sample)}\n histogram unsing histogram_unsorted={hist1}")
+    # print(f"sample={sorted(sample)}\n histogram unsing histogram_sorted={hist2}\n")
+    # assert hist0 == hist1, print(hist0, hist1)
+    # assert hist1 == hist2, print(hist1, hist2)
+    #
+    # # bin_frequency testing
     sorted_array = [1, 1, 2, 2, 3]
-    closed_freq = bin_frequency(sorted_array, (1, 2), interval_type="[]")
-    left_open_freq = bin_frequency(sorted_array, (1, 2), interval_type="(]")
-    right_open_freq = bin_frequency(sorted_array, (1, 2), interval_type="[)")
-    open_freq = bin_frequency(sorted_array, (1, 2), interval_type="()")
-    print(f"closed_freq={closed_freq}, left_open_freq={left_open_freq}, right_open_freq={right_open_freq}, open_freq={open_freq}\n")
+    # closed_freq = bin_frequency(sorted_array, (1, 2), interval_type="[]")
+    # left_open_freq = bin_frequency(sorted_array, (1, 2), interval_type="(]")
+    # right_open_freq = bin_frequency(sorted_array, (1, 2), interval_type="[)")
+    # open_freq = bin_frequency(sorted_array, (1, 2), interval_type="()")
+    # print(f"closed_freq={closed_freq}, left_open_freq={left_open_freq}, right_open_freq={right_open_freq}, open_freq={open_freq}\n")
+    #
+    # # find_equal_bins
+    # sorted_sample = sorted(uniform_random(100))
+    # limits = find_equal_bins(sorted_sample, depth=3)
+    # print(limits)
+    # hist1 = histogram_sorted(sorted_sample, limits=limits)
+    # hist2 = histogram_inefficient(sorted_sample, limits=limits)
+    # # print(histogram_unsorted(sorted_sample, limits=limits)) TODO
+    # print(len(hist1), hist1)
+    # assert histogram_sorted(sorted_sample, limits=limits) == histogram_inefficient(sorted_sample, limits=limits)
 
-    # find_equal_bins
+    #
+    # path = '/mnt/d/Data/batteries_testing/1st/dieharder/Dieharder(10) Diehard Parking Lot Test.pval'
+    # pvals = read_pvalues(path)
+    # find_equal_bins(pvals, depth=10)
 
-    sorted_sample = sorted(uniform_random(100))
-    limits = find_equal_bins(sorted_sample, depth=2)
-    hist1 = histogram_sorted(sorted_sample, limits=limits)
-    hist2 = histogram_inefficient(sorted_sample, limits=limits)
-    # print(histogram_unsorted(sorted_sample, limits=limits)) TODO
-    print(len(hist1), hist1)
-    assert histogram_sorted(sorted_sample, limits=limits) == histogram_inefficient(sorted_sample, limits=limits)
+    # print(bisect_left(sorted_array, 2))
+    # print(bisect_right(sorted_array, 2))
