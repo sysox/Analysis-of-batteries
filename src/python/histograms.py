@@ -2,6 +2,33 @@ from bisect import bisect_left, bisect_right
 import numpy as np
 from collections import Counter
 from utils import uniform_random, find_closest, intervals_and_freqs, read_pvalues
+def bin_frequency_inefficient(array, interval, interval_type="(]" ):
+    '''
+    computes frequency of interval in sorted_array
+    interval - tuple of (a,b)
+    interval_type - string "()", "[)", "(]", "[]"
+    '''
+    freq = 0
+    a,b = interval
+    if interval_type == '[]':
+        for val in array:
+            if val >= a and val <= b:
+                freq += 1
+
+    if interval_type == '(]':
+        for val in array:
+            if val > a and val <= b:
+                freq += 1
+    if interval_type == '[)':
+        for val in array:
+            if val >= a and val < b:
+                freq += 1
+    if interval_type == '()':
+        for val in array:
+            if val > a and val < b:
+                freq += 1
+    return freq
+
 def bin_frequency(sorted_array, interval, interval_type="(]" ):
     '''
     computes frequency of interval in sorted_array
