@@ -7,7 +7,7 @@ from scipy.stats import kstest, ks_2samp
 from scipy.stats import uniform, norm
 from utils import uniform_random
 
-from histograms import histogram_inefficient, bin_frequency
+from histograms import histogram_inefficient, bin_frequency, bin_frequency_inefficient
 from collections import namedtuple
 import mock, math, time, json
 from collections import defaultdict
@@ -62,7 +62,7 @@ def binom_as_normal_scipy(f_obs, n, p):
     return 2*min(pvalue_right, 1-pvalue_right)
 
 # uniformity tests from batteries or other C code
-def NIST_proportion(pvals, sorted=False, ALPHA = 0.01):
+def NIST_proportion(pvals, ALPHA = 0.01):
     '''
     see assess.c taken from NIST STS 2.1.2
     rewritten into python
@@ -76,9 +76,7 @@ def NIST_proportion(pvals, sorted=False, ALPHA = 0.01):
         fprintf(summary, "%4d/%-4d *  %s\n", passCount, sampleSize, testNames[test]);
     '''
     sampleSize = len(pvals)
-    if sorted == False:
-        pvals = sorted(pvals)
-    count = bin_frequency(pvals, interval=(0, ALPHA), interval_type="[]")
+    count = bin_frequency_inefficient(pvals, interval=(0, ALPHA), interval_type="[]")
     passCount = sampleSize - count
     res = mock.Mock()
     res.proportion = passCount/sampleSize
@@ -86,11 +84,13 @@ def NIST_proportion(pvals, sorted=False, ALPHA = 0.01):
     proportion_threshold_max = (p_hat + 3.0 * math.sqrt((p_hat * ALPHA) / sampleSize)) * sampleSize
     proportion_threshold_min = (p_hat - 3.0 * math.sqrt((p_hat * ALPHA) / sampleSize)) * sampleSize
     if ((passCount < proportion_threshold_min) or (passCount > proportion_threshold_max)):
-        res.passed = False
+    #     res.passed = False
+    # else:
+    #     res.passed = True
+    # return res
+        return 0
     else:
-        res.passed = True
-    return res
-
+        return 1
 
 
 
