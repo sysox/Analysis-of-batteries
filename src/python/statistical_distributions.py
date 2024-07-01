@@ -117,7 +117,7 @@ def normal_distributions(n=400, p=0.5, alpha=0.01, alternative="two-sided"):
     pdf = norm.pdf(x_disc, mean, std)
     cdf = norm.cdf(x_disc, mean, std)
     x_range = (norm.ppf(10 ** (-4), mean, std), norm.ppf(1 - 10 ** (-4), mean, std))
-    print(x_range)
+    # print(x_range)
     distribution_absolute = {'x': x_disc, 'mean': mean, 'std': std, 'pdf': pdf, 'cdf': cdf, 'ymax': max(pdf)}
 
     tail_alpha = alpha / 2 if alternative == "two-sided" else alpha
@@ -218,17 +218,19 @@ class ECDF:
         if xlabels.size == 0:
             xlabels = [f'{x:1.2f}' for x in xticks]
 
-        ax.step(xticks,yticks, where='post', label='ECDF', color='black', linewidth=0.5)
+        ax.step(xticks,yticks, where='post', label='ECDF_abs', color='black', linewidth=0.5)
 
+        if label != None:
+            ax.legend()
         x = np.linspace(domain[0], domain[1], 100)
-        print(f"x{x}\n cdf{self.cdf(x)}")
+        # print(f"x{x}\n cdf{self.cdf(x)}")
         ax.plot(x, self.cdf(x), '--', label='CDF', color='b', lw=1)
 
         x_plus = self.Dn_plus_x
         y_plus_min = self.cdf(x_plus)
         y_plus_max = y_plus_min + self.Dn_plus_value
         ax.vlines([x_plus], [y_plus_min], [y_plus_max], color='magenta', lw=4,
-                   label='$D_n^+$=' + f"{self.Dn_plus_value:1.4f}")
+                   label='$D_n^+$')
         ax.vlines([x_plus], [0], [y_plus_max], color='magenta', lw=1, linestyle='--')
 
         x_minus = self.Dn_minus_x
@@ -236,21 +238,30 @@ class ECDF:
         y_minus_min = y_minus_max - self.Dn_minus_value
 
         ax.vlines([x_minus], [y_minus_min], [y_minus_max], color='cyan', lw=4,
-                   label='$D_n^-$=' + f"{self.Dn_minus_value:1.4f}")
-        ax.vlines([x_minus], [0], [y_minus_max], color='cyan', lw=1, linestyle='--')
-        xticks, yticks = [x_minus, x_plus], [y_minus_min, y_plus_max]
-        ax.set_xticks(ticks=xticks, labels=[f"{xtick:1.2f}" for xtick in xticks])
-        ax2 = ax.twiny()
+                   label='$D_n^-$')
+        ax.vlines([x_minus], [1], [y_minus_max], color='cyan', lw=1, linestyle='--')
 
-        ax2.set_xticks(ticks=[0, 1], labels=['0', '1'])
+        ax2 = ax.twiny()
+        ay2 = ax.twinx()
+
+        ax.set_yticks(ticks=[0, 1], labels=['0',  '1'])
+        ax.set_xticks(ticks=xticks, labels=xlabels)
+        ax.set_xticks(ticks=[x_plus], labels=[f"{x_plus:1.2f}"])
+        ax2.set_xticks(ticks=[x_minus], labels=[f"{x_minus:1.2f}"])
+        ay2.set_yticks(ticks=[y_plus_max, y_minus_min ], labels=[ f"{y_plus_max:1.2f}", f"{y_minus_min:1.2f}"])
+        ay2.set_ylim(ax.get_ylim()) # to keep the same y-axis range as ax.get_ylim()
         ax2.set_xlim(ax.get_xlim())  # to keep the same x-axis range
+
         # ax.grid(True)
         # plt.plot([], [], ' ', label=f"D-={self.Dn_minus_value:1.2f}\nD+={self.Dn_plus_value:1.2f}")
         ax.legend(framealpha=0.5, shadow=False, fontsize="8", loc = "upper left")
         ax2.set_xlabel(label, labelpad=0)
 
+        ax.hlines([y_minus_min], [x_minus], [1], color='cyan', lw=1, linestyle='--')
+        ax.hlines([y_plus_max], [x_plus], [1], color='magenta', lw=1, linestyle='--')
+
     def __str__(self):
-        return f"ECDF: sample={self.x_sorted}, ecdf_values={self.ecdf_values}"
+        return f"ECDF_abs: sample={self.x_sorted}, ecdf_values={self.ecdf_values}"
 
 
 if __name__ == "__main__":
